@@ -3,6 +3,9 @@ This project is various fx bits from Game Jam Starter Kit by the lovely Andrew S
 For the full repo, check out his work here:
 https://gitlab.com/ASeward/gamejamstarterkit/-/tree/master
 
+To check out the project in action, view the demo:
+![demo_screenshot.png](demo_screenshot.png)
+
 # FX System Package
 FX System is a way to bridge animations and scripts, allowing easy spawning of effects, and other game objects right from animators.
 
