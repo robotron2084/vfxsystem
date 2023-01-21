@@ -97,6 +97,17 @@ namespace GameJamStarterKit.FXSystem
             Release(key);
         }
 
+        public void DespawnViaAnimation(string key, AnimationParameter parameter)
+        {
+            if (!IsRetained(key))
+                return;
+
+            var unit = GetRetainedUnit(key);
+            var animator = unit.GetComponent<Animator>();
+            animator.SetParameter(parameter);
+            Release(key);
+        }
+
         /// <summary>
         /// Spawns the FXUnit for the given key. Retains the key. Returns the retained key if already retained. 
         /// <para>waits a single frame before spawning the FXUnit.</para>
@@ -166,7 +177,7 @@ namespace GameJamStarterKit.FXSystem
             _trackedUnits.TryGetValue(key, out var unit);
             return unit;
         }
-
+        
         private FXUnit InternalSpawnPosition(FXSpawnerItem item)
         {
             var position = item.Parent == null ? transform.position : item.Parent.position;

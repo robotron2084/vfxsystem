@@ -19,7 +19,7 @@
     {
       "displayName": "VFX System Example",
       "description": "Example usage of the VFX System's subsystems.",
-      "path": "Samples~/Soong.BasicExample"
+      "path": "Samples~/VfxSystem.Demo"
     }
   ]
 }

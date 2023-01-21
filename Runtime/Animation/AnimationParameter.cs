@@ -35,5 +35,15 @@ namespace GameJamStarterKit
                     throw new ArgumentOutOfRangeException();
             }
         }
+
+        public static AnimationParameter Bool(string Key, bool Value)
+        {
+            return new AnimationParameter
+            {
+                Key = Key,
+                ParameterType = AnimatorControllerParameterType.Bool,
+                BoolValue = Value,
+            };
+        }
     }
 }
