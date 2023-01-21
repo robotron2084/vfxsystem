@@ -1,31 +1,19 @@
 # FX System Package
 FX System is a way to bridge animations and scripts, allowing easy spawning of effects, and other game objects right from animators.
-# How to add to your project
-### 2019.3 or higher
-`Window > Package Manager > + (top left button) > add package from git URL...` 
 
-paste `https://gitlab.com/ASeward/gamejamstarterkit.git#fx_system`
+`GameJamStarterKit.FXSystem` is a system designed to allow artists and programmers to work together on animations and events without the hassle of writing single purpose scripts or weird timing coroutines.
 
-### 2019.2 or less
-In your projects root directory (where the assets folder is) open `Packages > manifest.json`
+# Features
+* Various useful functions to be called from Animators.
+* FX Units - Define a GameObject as an FX allowing it to be spawned and controlled by an FX Spawner.
+* FX Spawner - A GameObject responsible for creating FX Units. Usually tied to an animation or other script.
+* Signalling - A Method to block code execution until a signal is raised either by an animation or other code.
 
-**remove the core package line if you've already installed the core package.**
-
-add this under `dependencies {`
-
-```
-"com.aseward.game-jam.starter-kit.core": "git+https://gitlab.com/ASeward/gamejamstarterkit.git#core",
-"com.aseward.game-jam-starter-kit.fxsystem": "git+https://gitlab.com/ASeward/gamejamstarterkit.git#fx_system"
-```
-
-so your manifest.json should look roughly like
-
-```json5
-{
-     "dependencies": {
-        "com.aseward.game-jam.starter-kit.core": "git+https://gitlab.com/ASeward/gamejamstarterkit.git#core",
-        "com.aseward.game-jam-starter-kit.fxsystem": "git+https://gitlab.com/ASeward/gamejamstarterkit.git#fx_system",
-        /// other dependencies
-     } 
-}
+### Example Signalling
+```c#
+Signaller s = myActor.GetComponent<Signaller>();
+myActor.TransitionIn();
+yield return s.WaitForSignal("Unblock");
+// animation plays, and raises the signal Unblock
+myActor.TransitionOut();
 ```
