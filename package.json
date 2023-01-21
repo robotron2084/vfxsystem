@@ -1,0 +1,25 @@
+{
+  "name": "com.aseward.game-jam-starter-kit.fxsystem",
+  "version": "0.0.1",
+  "displayName": "[Game Jam Starter Kit] FX System",
+  "description": "FX System is a way to bridge animations and scripts, allowing easy spawning of effects, and other game objects right from animators.",
+  "unity": "2019.1",
+  "unityRelease": "0b5",
+  "documentationUrl": "https://github.com/robotron2084/vfxsystem",
+  "changelogUrl": "https://github.com/robotron2084/vfxsystem/blob/main/changelog.md",
+  "licensesUrl": "https://github.com/robotron2084/vfxsystem/blob/main/LICENSE",
+  "dependencies": { },
+  "keywords": [  ],
+  "author": {
+    "name": "Andrew Seward",
+    "email": "chris@enemyhideout.com",
+    "url": "https://www.enemyhideout.com"
+  },
+  "samples": [
+    {
+      "displayName": "VFX System Example",
+      "description": "Example usage of the VFX System's subsystems.",
+      "path": "Samples~/Soong.BasicExample"
+    }
+  ]
+}
