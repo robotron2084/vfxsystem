@@ -1,12 +1,15 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace GameJamStarterKit.FXSystem
 {
     public class Signaller : MonoBehaviour
     {
-        public bool ProcessSignalNextFrame;
-        public string ActiveSignal;
+        public const string Complete = "Complete";
+        
+        private bool _processSignalNextFrame;
+        private string _activeSignal;
 
         private bool _endSignalThisFrame;
 
@@ -15,8 +18,8 @@ namespace GameJamStarterKit.FXSystem
             if (string.IsNullOrEmpty(key))
                 return;
 
-            ActiveSignal = key.ToLowerInvariant();
-            ProcessSignalNextFrame = true;
+            _activeSignal = key.ToLowerInvariant();
+            _processSignalNextFrame = true;
         }
 
         public IEnumerator WaitForSignal(string signal)
@@ -26,21 +29,21 @@ namespace GameJamStarterKit.FXSystem
 
             signal = signal.ToLowerInvariant();
 
-            while (!ProcessSignalNextFrame || ActiveSignal != signal)
+            while (_activeSignal != signal)
             {
                 _endSignalThisFrame = true;
                 yield return false;
             }
 
             _endSignalThisFrame = true;
-            yield return true;
+
         }
 
         private void LateUpdate()
         {
             if (_endSignalThisFrame)
             {
-                ProcessSignalNextFrame = false;
+                _processSignalNextFrame = false;
             }
         }
     }
