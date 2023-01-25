@@ -6,14 +6,25 @@ using UnityEngine.Serialization;
 
 namespace GameJamStarterKit.FXSystem
 {
+    /// <summary>
+    /// A generic mechanism to yield/await a 'signal'. This is a generic way to bridge different systems, but is most
+    /// useful allowing code to await animation. A common workflow is:
+    ///   * Code plays an animation
+    ///   * Code calls yield return signaller.WaitForSignal("BeginPhase");
+    ///   * The animation plays, then calls RaiseSignal("BeginPhase");
+    ///   * The code recieves the signal and execution resumes.
+    ///
+    /// </summary>
     public class Signaller : MonoBehaviour
     {
+        /// <summary>
+        /// A useful default for signals.
+        /// </summary>
         public const string Complete = "Complete";
         
-        // A signal might be raised in animation or a coroutine and then the frame will end before the listening coroutine
-        // gets an opportunity to respond.
-        private bool _endSignalThisFrame = false;
-
+        /// <summary>
+        /// A simple adapter to allow for cross-coroutine communication and debugging.
+        /// </summary>
         private class SignalObserver
         {
             public string Signal;
@@ -26,11 +37,16 @@ namespace GameJamStarterKit.FXSystem
             }
         }
 
-        private HashSet<string> _listeners = new HashSet<string>();
         private List<SignalObserver> _observers = new List<SignalObserver>();
         
+        // A list of signals that have been received this frame.
         private HashSet<string> _activeSignals = new HashSet<string>();
 
+        
+        /// <summary>
+        /// Called to raise a signal on this animator.
+        /// </summary>
+        /// <param name="key">A string that defines the agreed upon signal between systems.</param>
         public void RaiseSignal(string key)
         {
             if (string.IsNullOrEmpty(key))
@@ -38,17 +54,25 @@ namespace GameJamStarterKit.FXSystem
 
             string signal = key.ToLowerInvariant();
             _activeSignals.Add(signal);
-            foreach (var signalObserver in _observers)
+            for (int i = _observers.Count - 1; i >= 0; i--)
             {
+                var signalObserver = _observers[i];
                 if (signalObserver.Signal == signal)
                 {
                     signalObserver.Raised = true;
+                    _observers.Remove(signalObserver);
                 }
             }
 
-            Debug.Log($"Raising signal {key} - {gameObject.name}", gameObject);
+            //Debug.Log($"Raising signal {key} - {gameObject.name}", gameObject);
         }
 
+        /// <summary>
+        /// Call this to wait for the signal requested to be raised.
+        /// </summary>
+        /// <param name="signal">The signal we are interested in.</param>
+        /// <param name="listener">A listener value solely used to provide debugging info.</param>
+        /// <returns></returns>
         public IEnumerator WaitForSignal(string signal, object listener=null)
         {
             if (string.IsNullOrEmpty(signal))
@@ -75,10 +99,7 @@ namespace GameJamStarterKit.FXSystem
                 yield return null;
             }
 
-            Debug.Log($"Found signal {signal} on frame {Time.frameCount} on {gameObject.name}", gameObject);
-            _observers.Remove(observer);
-            _endSignalThisFrame = true;
-
+            //Debug.Log($"Found signal {signal} on frame {Time.frameCount} on {gameObject.name}", gameObject);
         }
 
         private void LateUpdate()
@@ -86,14 +107,15 @@ namespace GameJamStarterKit.FXSystem
             _activeSignals.Clear();
         }
 
+        /// <summary>
+        /// Shown in the inspector.
+        /// </summary>
+        /// <returns></returns>
         public string DebugInfo()
         {
             StringBuilder sb = new StringBuilder();
             var listeners = string.Join(",", _observers);
             sb.AppendLine($"Listeners: {listeners}");
-            var signals = string.Join(",", _activeSignals);
-            sb.AppendLine($"Signals: {signals}");
-
             return sb.ToString();
         }
     }
